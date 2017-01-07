@@ -47,7 +47,7 @@ end
 
 function GroupHistoryGroupEntryDelete_OnClick(caller, button)
   local pos = caller:GetParent().groupIndex
-  print('Delete entry #'..pos)
+  --print('Delete entry #'..pos)
 end
 
 local function GroupOrInstanceEvent(event)
@@ -58,7 +58,7 @@ local function GroupOrInstanceChanged(event)
   SetMapToCurrentZone()
   local debug_name, instanceType, debug_diff = GetInstanceInfo()
   local instanceID = EJ_GetCurrentInstance()
-  print(format('%s | %s | %s | %d | %d', event, debug_name, instanceType, debug_diff, instanceID))
+  --print(format('%s | %s | %s | %d | %d', event, debug_name, instanceType, debug_diff, instanceID))
 
   local doUpdate = false
 

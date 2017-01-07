@@ -1,0 +1,328 @@
+<UI>
+  <Button name="GroupHistoryButtonSmall" virtual="true">
+    <Size x="36" y="36" />
+  </Button>
+
+  <Button name="GroupHistoryWhisperButton" inherits="GroupHistoryButtonSmall" virtual="true">
+    <NormalTexture file="Interface\CHATFRAME\UI-ChatIcon-Chat-Up" />
+    <HighlightTexture file="Interface\CHATFRAME\UI-ChatIcon-BlinkHilight" alphaMode="ADD" />
+    <PushedTexture file="Interface\CHATFRAME\UI-ChatIcon-Chat-Down" />
+    <Scripts>
+      <OnEnter>
+        GameTooltip:SetOwner(self, 'ANCHOR_TOP')
+        GameTooltip:SetText('Whisper '..self:GetParent().player, nil, nil, nil, nil, true)
+        GameTooltip:Show()
+      </OnEnter>
+      <OnLeave>
+        GameTooltip:Hide()
+      </OnLeave>
+      <OnClick>
+        ChatFrame_SendTell(self:GetParent().fullName)
+      </OnClick>
+    </Scripts>
+  </Button>
+
+  <Button name="GroupHistoryInviteButton" inherits="GroupHistoryButtonSmall" virtual="true">
+    <NormalTexture file="Interface\CHATFRAME\UI-ChatRosterIcon-Up" />
+    <HighlightTexture file="Interface\CHATFRAME\UI-ChatIcon-BlinkHilight" alphaMode="ADD" />
+    <PushedTexture file="Interface\CHATFRAME\UI-ChatRosterIcon-Down" />
+    <Scripts>
+      <OnEnter>
+        GameTooltip:SetOwner(self, 'ANCHOR_TOP')
+        GameTooltip:SetText('Invite '..self:GetParent().player..' to party', nil, nil, nil, nil, true)
+        GameTooltip:Show()
+      </OnEnter>
+      <OnLeave>
+        GameTooltip:Hide()
+      </OnLeave>
+      <OnClick>
+        InviteUnit(self:GetParent().fullName)
+      </OnClick>
+    </Scripts>
+  </Button>
+
+  <Button name="GroupHistoryEntryTemplate" virtual="true">
+    <Layers>
+      <Layer level="BACKGROUND">
+        <Texture parentKey="TopLeft" name="$parentTopLeft" file="Interface\Buttons\UI-Quickslot2">
+          <Size x="6" y="6" />
+          <Anchors>
+            <Anchor point="TOPLEFT" />
+          </Anchors>
+          <TexCoords left="0.1875" right="0.28125" top="0.1875" bottom="0.28125" />
+        </Texture>
+        <Texture parentKey="TopRight" name="$parentTopRight" file="Interface\Buttons\UI-Quickslot2">
+          <Size x="6" y="6" />
+          <Anchors>
+            <Anchor point="TOPRIGHT" />
+          </Anchors>
+          <TexCoords left="0.703125" right="0.796875" top="0.1875" bottom="0.28125" />
+        </Texture>
+        <Texture parentKey="BottomLeft" name="$parentBottomLeft" file="Interface\Buttons\UI-Quickslot2">
+          <Size x="6" y="6" />
+          <Anchors>
+            <Anchor point="BOTTOMLEFT" />
+          </Anchors>
+          <TexCoords left="0.1875" right="0.28125" top="0.703125" bottom="0.796875" />
+        </Texture>
+        <Texture parentKey="BottomRight" name="$parentBottomRight" file="Interface\Buttons\UI-Quickslot2">
+          <Size x="6" y="6" />
+          <Anchors>
+            <Anchor point="BOTTOMRIGHT" />
+          </Anchors>
+          <TexCoords left="0.703125" right="0.796875" top="0.703125" bottom="0.796875" />
+        </Texture>
+        <Texture parentKey="TopMiddle" name="$parentTopMiddle" file="Interface\Buttons\UI-Quickslot2">
+          <Size x="6" y="6" />
+          <Anchors>
+            <Anchor point="TOPLEFT" relativeKey="$parent.TopLeft" relativePoint="TOPRIGHT" />
+            <Anchor point="BOTTOMRIGHT" relativeKey="$parent.TopRight" relativePoint="BOTTOMLEFT" />
+          </Anchors>
+          <TexCoords left="0.296875" right="0.6875" top="0.1875" bottom="0.28125" />
+        </Texture>
+        <Texture parentKey="MiddleLeft" name="$parentMiddleLeft" file="Interface\Buttons\UI-Quickslot2">
+          <Size x="6" y="6" />
+          <Anchors>
+            <Anchor point="TOPRIGHT" relativeKey="$parent.TopLeft" relativePoint="BOTTOMRIGHT" />
+            <Anchor point="BOTTOMLEFT" relativeKey="$parent.BottomLeft" relativePoint="TOPLEFT" />
+          </Anchors>
+          <TexCoords left="0.1875" right="0.28125" top="0.296875" bottom="0.609375" />
+        </Texture>
+        <Texture parentKey="MiddleRight" name="$parentMiddleRight" file="Interface\Buttons\UI-Quickslot2">
+          <Size x="6" y="6" />
+          <Anchors>
+            <Anchor point="TOPRIGHT" relativeKey="$parent.TopRight" relativePoint="BOTTOMRIGHT" />
+            <Anchor point="BOTTOMLEFT" relativeKey="$parent.BottomRight" relativePoint="TOPLEFT" />
+          </Anchors>
+          <TexCoords left="0.703125" right="0.796875" top="0.296875" bottom="0.609375" />
+        </Texture>
+        <Texture parentKey="BottomMiddle" name="$parentBottomMiddle" file="Interface\Buttons\UI-Quickslot2">
+          <Size x="6" y="6" />
+          <Anchors>
+            <Anchor point="TOPLEFT" relativeKey="$parent.BottomLeft" relativePoint="TOPRIGHT" />
+            <Anchor point="BOTTOMRIGHT" relativeKey="$parent.BottomRight" relativePoint="BOTTOMLEFT" />
+          </Anchors>
+          <TexCoords left="0.296875" right="0.6875" top="0.703125" bottom="0.796875" />
+        </Texture>
+      </Layer>
+
+      <Layer level="HIGHLIGHT">
+        <Texture parentKey="TopLeft" name="$parentTopLeft" file="Interface\Buttons\UI-Button-Outline" alphaMode="ADD">
+          <Size x="6" y="6" />
+          <Anchors>
+            <Anchor point="TOPLEFT" />
+          </Anchors>
+          <TexCoords left="0" right="0.5" top="0" bottom="0.5" />
+        </Texture>
+        <Texture parentKey="TopRight" name="$parentTopRight" file="Interface\Buttons\UI-Button-Outline" alphaMode="ADD">
+          <Size x="6" y="6" />
+          <Anchors>
+            <Anchor point="TOPRIGHT" />
+          </Anchors>
+          <TexCoords left="0.5" right="1.0" top="0" bottom="0.5" />
+        </Texture>
+        <Texture parentKey="BottomLeft" name="$parentBottomLeft" file="Interface\Buttons\UI-Button-Outline" alphaMode="ADD">
+          <Size x="6" y="6" />
+          <Anchors>
+            <Anchor point="BOTTOMLEFT" />
+          </Anchors>
+          <TexCoords left="0" right="0.5" top="0.5" bottom="1.0" />
+        </Texture>
+        <Texture parentKey="BottomRight" name="$parentBottomRight" file="Interface\Buttons\UI-Button-Outline" alphaMode="ADD">
+          <Size x="6" y="6" />
+          <Anchors>
+            <Anchor point="BOTTOMRIGHT" />
+          </Anchors>
+          <TexCoords left="0.5" right="1.0" top="0.5" bottom="1.0" />
+        </Texture>
+        <Texture parentKey="TopMiddle" name="$parentTopMiddle" file="Interface\Buttons\UI-Button-Outline" alphaMode="ADD">
+          <Size x="6" y="6" />
+          <Anchors>
+            <Anchor point="TOPLEFT" relativeKey="$parent.TopLeft" relativePoint="TOPRIGHT" />
+            <Anchor point="BOTTOMRIGHT" relativeKey="$parent.TopRight" relativePoint="BOTTOMLEFT" />
+          </Anchors>
+          <TexCoords left="0.25" right="0.5" top="0" bottom="0.5" />
+        </Texture>
+        <Texture parentKey="MiddleLeft" name="$parentMiddleLeft" file="Interface\Buttons\UI-Button-Outline" alphaMode="ADD">
+          <Size x="6" y="6" />
+          <Anchors>
+            <Anchor point="TOPRIGHT" relativeKey="$parent.TopLeft" relativePoint="BOTTOMRIGHT" />
+            <Anchor point="BOTTOMLEFT" relativeKey="$parent.BottomLeft" relativePoint="TOPLEFT" />
+          </Anchors>
+          <TexCoords left="0" right="0.5" top="0.25" bottom="0.5" />
+        </Texture>
+        <Texture parentKey="MiddleRight" name="$parentMiddleRight" file="Interface\Buttons\UI-Button-Outline" alphaMode="ADD">
+          <Size x="6" y="6" />
+          <Anchors>
+            <Anchor point="TOPRIGHT" relativeKey="$parent.TopRight" relativePoint="BOTTOMRIGHT" />
+            <Anchor point="BOTTOMLEFT" relativeKey="$parent.BottomRight" relativePoint="TOPLEFT" />
+          </Anchors>
+          <TexCoords left="0.5" right="1.0" top="0.25" bottom="0.5" />
+        </Texture>
+        <Texture parentKey="BottomMiddle" name="$parentBottomMiddle" file="Interface\Buttons\UI-Button-Outline" alphaMode="ADD">
+          <Size x="6" y="6" />
+          <Anchors>
+            <Anchor point="TOPLEFT" relativeKey="$parent.BottomLeft" relativePoint="TOPRIGHT" />
+            <Anchor point="BOTTOMRIGHT" relativeKey="$parent.BottomRight" relativePoint="BOTTOMLEFT" />
+          </Anchors>
+          <TexCoords left="0.5" right="0.5" top="0.5" bottom="1.0" />
+        </Texture>
+      </Layer>
+    </Layers>
+		<NormalFont style="GameFontHighlight"/>
+		<HighlightFont style="GameFontHighlight"/>
+		<DisabledFont style="GameFontDisable"/>
+	</Button>
+
+  <Button name="GroupHistoryGroupEntryTemplate" inherits="GroupHistoryEntryTemplate" virtual="true">
+    <Layers>
+      <Layer level="ARTWORK">
+        <FontString name="$parentDate" text="[Date - Time]" inherits="GameFontNormalMed2" justifyH="RIGHT">
+          <Anchors>
+            <Anchor point="TOPRIGHT">
+              <Offset x="-4" y="-12" />
+            </Anchor>
+          </Anchors>
+        </FontString>
+        <FontString name="$parentInstance" text="[Instance]" inherits="ObjectiveFont" justifyH="RIGHT">
+          <Anchors>
+            <Anchor point="BOTTOMRIGHT">
+              <Offset x="-4" y="12" />
+            </Anchor>
+          </Anchors>
+        </FontString>
+      </Layer>
+      <Layer level="ARTWORK">
+        <Texture name="$parentIcon" file="Interface\ENCOUNTERJOURNAL\UI-EJ-DUNGEONBUTTON-NeltharionsLair">
+          <Size x="96" y="48" />
+          <Anchors>
+            <Anchor point="TOPLEFT">
+              <Offset x="8" y="-12" />
+            </Anchor>
+          </Anchors>
+        </Texture>
+      </Layer>
+    </Layers>
+  </Button>
+
+  <Button name="GroupHistoryMemberEntryTemplate" inherits="GroupHistoryEntryTemplate" virtual="true">
+    <Layers>
+      <Layer level="ARTWORK">
+        <FontString parentKey="classLabel" inherits="GameFontNormalMed2" justifyH="LEFT">
+          <Anchors>
+            <Anchor point="TOPLEFT">
+              <Offset x="8" y="-12" />
+            </Anchor>
+          </Anchors>
+        </FontString>
+        <FontString parentKey="playerLabel" inherits="GameFontNormal" justifyH="LEFT">
+          <Anchors>
+            <Anchor point="BOTTOMLEFT">
+              <Offset x="8" y="12" />
+            </Anchor>
+          </Anchors>
+        </FontString>
+        <!--<Texture file="Interface\COMMON\Indicator-Gray" parentKey="status">
+          <Size x="32" y="32" />
+          <Anchors>
+            <Anchor point="TOPRIGHT" />
+          </Anchors>
+        </Texture>-->
+      </Layer>
+    </Layers>
+    <Frames>
+      <Button parentKey="whisper" inherits="GroupHistoryWhisperButton">
+        <Anchors>
+          <Anchor point="BOTTOMRIGHT" />
+        </Anchors>
+      </Button>
+      <Button inherits="GroupHistoryInviteButton">
+        <Anchors>
+          <Anchor point="BOTTOMRIGHT" parentKey="invite" relativeKey="$parent.whisper" relativePoint="BOTTOMLEFT" />
+        </Anchors>
+      </Button>
+    </Frames>
+  </Button>
+
+  <Button name="GroupHistoryActionButton" virtual="true">
+    <Size x="36" y="36" />
+    <Layers>
+      <Layer level="BACKGROUND">
+        <Texture name="$parentIcon" parentKey="icon" />
+      </Layer>
+    </Layers>
+    <NormalTexture file="Interface\BUTTONS\UI-SquareButton-Up" />
+    <HighlightTexture file="Interface\BUTTONS\ButtonHilight-Round" alphaMode="ADD" />
+    <PushedTexture file="Interface\BUTTONS\UI-SquareButton-Down" />
+  </Button>
+
+  <Frame name="GroupHistoryConfirmTemplate" clampToScreen="true" hidden="true" virtual="true">
+    <Size x="350" y="200" />
+    <Anchors>
+      <Anchor point="CENTER" />
+    </Anchors>
+    <Backdrop bgFile="Interface\DialogFrame\UI-DialogBox-Background-Dark" edgeFile="Interface\Tooltips\UI-Tooltip-Border" tile="true">
+      <BackgroundInsets>
+        <AbsInset left="4" right="4" top="4" bottom="4" />
+      </BackgroundInsets>
+      <TileSize>
+        <AbsValue val="16" />
+      </TileSize>
+      <EdgeSize>
+        <AbsValue val="16" />
+      </EdgeSize>
+    </Backdrop>
+    <Layers>
+      <Layer>
+        <FontString parentKey="Title" inherits="GameFontNormalMed2" justifyH="CENTER">
+          <Anchors>
+            <Anchor point="TOP" y="-24" />
+          </Anchors>
+        </FontString>
+      </Layer>
+      <Layer>
+        <FontString parentKey="TextSection" inherits="GameFontNormalMed2" justifyV="CENTER" justifyH="CENTER">
+          <Color r="1" g="1" b="1" />
+          <Anchors>
+            <Anchor point="TOPLEFT" x="16" y="-48" />
+            <Anchor point="BOTTOMRIGHT" x="-16" y="48" />
+          </Anchors>
+        </FontString>
+      </Layer>
+      <Layer level="ARTWORK">
+        <Texture file="Interface\DialogFrame\UI-Dialog-Icon-AlertNew">
+          <Size x="32" y="32" />
+          <Anchors>
+            <Anchor point="TOPLEFT" x="16" y="-16" />
+          </Anchors>
+        </Texture>
+        <Texture file="Interface\DialogFrame\UI-Dialog-Icon-AlertNew">
+          <Size x="32" y="32" />
+          <Anchors>
+            <Anchor point="TOPRIGHT" x="-16" y="-16" />
+          </Anchors>
+        </Texture>
+      </Layer>
+    </Layers>
+    <Frames>
+      <!--<Button parentKey="Decline" inherits="OptionsButtonTemplate">
+        <Anchors>
+          <Anchor point="BOTTOM" y="16" />
+          <Anchor point="RIGHT" relativePoint="CENTER" x="-8" />
+        </Anchors>
+      </Button>
+      <Button parentKey="Confirm" inherits="OptionsButtonTemplate">
+        <Anchors>
+          <Anchor point="BOTTOM" y="16" />
+          <Anchor point="LEFT" relativePoint="CENTER" x="8" />
+        </Anchors>
+      </Button>-->
+      <Button parentKey="Confirm" inherits="OptionsButtonTemplate">
+        <Anchors>
+          <Anchor point="BOTTOM" y="16" />
+          <!--<Anchor point="LEFT" relativePoint="CENTER" x="8" />-->
+        </Anchors>
+      </Button>
+    </Frames>
+  </Frame>
+</UI>

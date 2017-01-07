@@ -1,0 +1,54 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/ ..\FrameXML\UI.xsd">
+  <Button name="GroupHistoryMinimapButton" parent="Minimap" enableMouse="true" movable="true" hidden="false">
+    <Size>
+      <AbsDimension x="33" y="33" />
+    </Size>
+    <Anchors>
+      <Anchor point="TOPLEFT" />
+    </Anchors>
+    <Layers>
+      <Layer level="BACKGOUND">
+        <Texture name="$parentIcon" file="Interface\QUESTFRAME\UI-QuestLog-BookIcon">
+          <Size>
+            <AbsDimension x="21" y="22" />
+          </Size>
+          <Anchors>
+            <Anchor point="TOPLEFT">
+              <Offset>
+                <AbsDimension x="7" y="-6" />
+              </Offset>
+            </Anchor>
+          </Anchors>
+        </Texture>
+      </Layer>
+      <Layer level="OVERLAY" alphaMode="ALPHAKEY">
+        <Texture file="Interface\MINIMAP\Minimap-TrackingBorder">
+          <Size>
+            <AbsDimension x="56" y="56" />
+          </Size>
+          <Anchors>
+            <Anchor point="TOPLEFT" />
+          </Anchors>
+        </Texture>
+      </Layer>
+    </Layers>
+    <Frames>
+      <Frame parentKey="DraggingFrame" hidden="true"></Frame>
+    </Frames>
+    <HighlightTexture alphaMode="ADD" file="Interface\MINIMAP\UI-Minimap-ZoomButton-Highlight" />
+    <Scripts>
+      <OnLoad>
+        self:RegisterForClicks("LeftButtonUp", "RightButtonUp");
+        self:RegisterForDrag("LeftButton");
+      </OnLoad>
+      <OnDragStart>
+        self:LockHighlight();
+        self.DraggingFrame:Show();
+      </OnDragStart>
+      <OnDragStop>
+        self:UnlockHighlight()
+        self.DraggingFrame:Hide();
+      </OnDragStop>
+    </Scripts>
+  </Button>
+</Ui>

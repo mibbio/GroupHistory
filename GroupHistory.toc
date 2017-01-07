@@ -1,0 +1,18 @@
+## Interface: 70100
+## Title: Group History
+## Author: mibbio
+## Version: 1.0.0
+## Notes: Save a history of groups you were member
+## DefaultState: Enabled
+## LoadOnDemand: 0
+## SavedVariables: GroupHistory_Vars, GroupHistory_Groups
+## X-Package-Version: @project-version@
+
+lua\Helper.lua
+
+xml\Templates.xml
+xml\GroupHistory.xml
+xml\MinimapButton.xml
+
+lua\GroupHistory.lua
+lua\MinimapButton.lua

@@ -57,7 +57,7 @@ function GroupHistory_Helper.GetPlayerList()
     for i=1,40 do
       if UnitExists('raid'..i) then table.insert(players, GetUnitInfo('raid'..i)) end
     end
-  elseif IsInGroup then
+  elseif IsInGroup() then
     for i=1,4 do
       if UnitExists('party'..i) then table.insert(players, GetUnitInfo('party'..i)) end
     end

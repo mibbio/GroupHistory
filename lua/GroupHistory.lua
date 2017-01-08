@@ -2,12 +2,16 @@ local ADDON, Addon = ...
 
 Addon.Vars = {
   MinimapPos = 45,
-  CfgVersion = 2,
-  Instance = 0
+  CfgVersion = 2
+}
+Addon.Session = {
+  ID = 0,
+  Group = {}
 }
 Addon.Groups = {}
 
 GroupHistory_Vars = Addon.Vars
+GroupHistory_Session = Addon.Session
 GroupHistory_Groups = Addon.Groups
 
 Addon.Name = GetAddOnMetadata(ADDON, 'Title')
@@ -21,12 +25,6 @@ local ROW_HEIGHT = 60
 local ROW_WIDTH = 300
 local STATUS_TIMEOUT = 30
 
-local STATUS_TEXTURE = {
-  'COMMON\\Indicator-Gray',
-  'COMMON\\Indicator-Green'
-}
-
--- functions
 function Addon:ToggleVisibility()
   if Addon.Frame:IsVisible() then
     Addon.Frame:Hide()
@@ -47,72 +45,71 @@ end
 
 function GroupHistoryGroupEntryDelete_OnClick(caller, button)
   local pos = caller:GetParent().groupIndex
-  --print('Delete entry #'..pos)
 end
 
-local function GroupOrInstanceEvent(event)
-
-end
-
-local function GroupOrInstanceChanged(event)
-  SetMapToCurrentZone()
-  local debug_name, instanceType, debug_diff = GetInstanceInfo()
-  local instanceID = EJ_GetCurrentInstance()
-  --print(format('%s | %s | %s | %d | %d', event, debug_name, instanceType, debug_diff, instanceID))
-
-  local doUpdate = false
-
-  if event == 'ZONE_CHANGED_NEW_AREA' then
-    if not (IsInInstance() or IsInGroup()) then
-      if (Addon.Frame:IsEventRegistered('GROUP_ROSTER_UPDATE')) then
-        Addon.Frame:UnregisterEvent('GROUP_ROSTER_UPDATE')
-      end
-      GroupHistory_Vars.LastInstance = 0
-      return
-    else
-      Addon.Frame:RegisterEvent('GROUP_ROSTER_UPDATE')
-    end
-  elseif event == 'GROUP_ROSTER_UPDATE' then
-    GroupHistory_Vars.LastInstance = 0
-    doUpdate = true
-  else
-   return
+function Addon:ProcessChanges(event)
+  print(event)
+  local guids = GroupHistory_Helper.GetGroupGUIDs()
+  if (#guids == 0) then
+    self.Session.ID = 0
+    self.Session.Group = {}
+    return
   end
-  -- fix instanceid = 0 at mythic+ start
-  if (instanceID ~= 0) and ((instanceID ~= GroupHistory_Vars.LastInstance) or doUpdate) then
-    GroupHistory_Vars.LastInstance = instanceID
-    if instanceType == 'party' or instanceType == 'raid' then
-      local entry = {}
-      entry.players = {}
 
-      if doUpdate and (#GroupHistory_Groups > 0) and (GroupHistory_Groups[#GroupHistory_Groups].id == instanceID) then
-        entry = table.remove(GroupHistory_Groups)
-      else
-        entry.time = time()
-        entry.id = instanceID
-      end
+  SetMapToCurrentZone()
+  local save = false
+  local replace = false
+  local instanceID = EJ_GetCurrentInstance()
+  local changedGroup = not GroupHistory_Helper.IsEqualGroup(guids, Addon.Session.Group)
 
-      local players = GH_Helper.GetPlayerList()
-      if GH_Helper.tcount(players) >= GH_Helper.tcount(entry.players) then
-        entry.players = players
-      end
-      table.insert(GroupHistory_Groups, entry)
+  if (event == 'GROUP_ROSTER_UPDATE') and (changedGroup) then
+    replace = (#self.Session.Group > 0)
+    if IsInInstance() then
+      save = (#guids >= #self.Session.Group)
+      self.Session.ID = instanceID
     end
+    self.Session.Group = guids
+    print('1')
+  end
+
+  if (event == 'ZONE_CHANGED_NEW_AREA') and IsInInstance() then
+    print('2')
+    if (instanceID > 0) and (self.Session.ID ~= instanceID) then
+      print('3')
+      self.Session.ID = instanceID
+      self.Session.Group = guids
+      save = true
+    end
+  end
+
+  if save then
+    print(ADDON..': save = '..tostring(save)..', replace = '..tostring(replace))
+    local entry = {}
+    if replace and (#self.Groups > 0) then
+      entry = table.remove(self.Groups)
+    else
+      entry.time = time()
+      entry.id = instanceID
+    end
+    entry.players = GroupHistory_Helper.GetPlayerList()
+    table.insert(self.Groups, entry)
   end
 end
 
 local function DeleteGroup(pos)
-  if GH_Helper.tcount(GroupHistory_Groups) >= num then
+  if GroupHistory_Helper.tcount(GroupHistory_Groups) >= num then
     table.remove(GroupHistory_Groups, pos)
     _G[Addon.Frame:GetName()..'GroupFrame']:Update()
   end
 end
 
 function Addon:Setup()
-  self.Frame:UnregisterEvent('ADDON_LOADED')
-  self.Frame:RegisterEvent('ZONE_CHANGED_NEW_AREA')
   DEFAULT_CHAT_FRAME:AddMessage(
-    format('|c'..GH_COLORS['ORANGE']..'%s|r |c'..GH_COLORS['BLUE']..'v%s|r |c'..GH_COLORS['GREEN']..'loaded.|r', Addon.Name, Addon.Version)
+    format('|c%s%s|r |c%sv%s|r |c%sloaded.|r',
+      GroupHistory_Helper.Colors['ORANGE'], Addon.Name,
+      GroupHistory_Helper.Colors['BLUE'], Addon.Version,
+      GroupHistory_Helper.Colors['GREEN']
+    )
   )
 
   -----------------------
@@ -142,7 +139,7 @@ function Addon:Setup()
           if region:GetName() == row:GetName()..'Icon' then
             region:SetTexture(buttonTexture)
           elseif region:GetName() == row:GetName()..'Date' then
-            region:SetText(GH_Helper.LocalizedDate(Addon.Groups[value].time))
+            region:SetText(GroupHistory_Helper.LocalizedDate(Addon.Groups[value].time))
           elseif region:GetName() == row:GetName()..'Instance' then
             region:SetText(instanceName)
           end
@@ -254,7 +251,6 @@ function Addon:Setup()
   end})
   memberFrame.rows = memberRows
 end
--- end functions
 
 function Addon:ConfirmDialog(msg, callback)
   local confirmFrame = _G[ADDON..'ConfirmDialog']
@@ -274,6 +270,7 @@ end
 
 Addon.Frame:SetScript('OnEvent', function(self, event, ...)
   if event == 'ADDON_LOADED' then
+    Addon.Frame:UnregisterEvent('ADDON_LOADED')
     if not GroupHistory_Vars.CfgVersion then
       GroupHistory_Vars.CfgVersion = Addon.Vars.CfgVersion
       GroupHistory_Groups = {}
@@ -281,10 +278,14 @@ Addon.Frame:SetScript('OnEvent', function(self, event, ...)
     end
     Addon.Vars = GroupHistory_Vars
     Addon.Groups = GroupHistory_Groups
+    Addon.Session = GroupHistory_Session
     Addon:Setup()
   elseif (event == 'ZONE_CHANGED_NEW_AREA') or (event == 'GROUP_ROSTER_UPDATE') then
-    GroupOrInstanceChanged(event)
+    Addon:ProcessChanges(event)
   end
 end)
+
+Addon.Frame:RegisterEvent('ZONE_CHANGED_NEW_AREA')
+Addon.Frame:RegisterEvent('GROUP_ROSTER_UPDATE')
 
 -- http://wowprogramming.com/docs/api/NotifyInspect

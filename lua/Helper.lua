@@ -1,9 +1,9 @@
-GH_COLORS = {}
-GH_COLORS['ORANGE'] = 'ffffc300'
-GH_COLORS['BLUE'] = 'ff3396ff'
-GH_COLORS['GREEN'] = 'ff3cff00'
-
-GH_Helper = {}
+GroupHistory_Helper = {}
+GroupHistory_Helper.Colors = {
+  ['ORANGE']  = 'ffffc300',
+  ['BLUE']    = 'ff3396ff',
+  ['GREEN']   = 'ff3cff00'
+}
 
 local function GetUnitInfo(unit)
   if UnitExists(unit) then
@@ -16,7 +16,7 @@ local function GetUnitInfo(unit)
   else return nil end
 end
 
-function GH_Helper.tcount(tab)
+function GroupHistory_Helper.tcount(tab)
   local n = 0
   for _ in pairs(tab) do
     n = n + 1
@@ -24,21 +24,48 @@ function GH_Helper.tcount(tab)
   return n
 end
 
-function GH_Helper.GetPlayerList()
+function GroupHistory_Helper.IsEqualGroup(g1, g2)
+  if #g1 ~= #g2 then return false end
+  table.sort(g1)
+  table.sort(g2)
+  local equalValues = 0
+  for k,v in pairs(g1) do
+    if (v ~= g2[k]) then return false end
+  end
+  return true
+end
+
+function GroupHistory_Helper.GetGroupGUIDs()
+  local guids = {}
+  if IsInRaid() then
+    for i=1,40 do
+      local unit = 'raid'..i
+      if UnitExists(unit) then table.insert(guids, UnitGUID(unit)) end
+    end
+  elseif IsInGroup() then
+    for i = 1,4 do
+      local unit = 'party'..i
+      if UnitExists(unit) then table.insert(guids, UnitGUID(unit)) end
+    end
+  end
+  return guids
+end
+
+function GroupHistory_Helper.GetPlayerList()
   local players = {}
   if IsInRaid() then
     for i=1,40 do
-      if GetUnitInfo('raid'..i) then table.insert(players, GetUnitInfo('raid'..i)) end
+      if UnitExists('raid'..i) then table.insert(players, GetUnitInfo('raid'..i)) end
     end
   elseif IsInGroup then
     for i=1,4 do
-      if GetUnitInfo('party'..i) then table.insert(players, GetUnitInfo('party'..i)) end
+      if UnitExists('party'..i) then table.insert(players, GetUnitInfo('party'..i)) end
     end
   end
   return players
 end
 
-function GH_Helper.GetGroupDetails(groupIndex)
+function GroupHistory_Helper.GetGroupDetails(groupIndex)
   local details = {}
   local group = GroupHistory_Groups[groupIndex].group
   if group then
@@ -50,7 +77,7 @@ function GH_Helper.GetGroupDetails(groupIndex)
   return details
 end
 
-function GH_Helper.LocalizedDate(timevalue)
+function GroupHistory_Helper.LocalizedDate(timevalue)
   local locale = GetLocale()
   if locale == 'deDE' then
     return date('%d.%m.%Y - %X', timevalue)

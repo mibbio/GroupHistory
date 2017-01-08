@@ -5,7 +5,7 @@
 ## Notes: Save a history of groups you were member
 ## DefaultState: Enabled
 ## LoadOnDemand: 0
-## SavedVariables: GroupHistory_Vars, GroupHistory_Groups
+## SavedVariables: GroupHistory_Vars, GroupHistory_Groups, GroupHistory_Session
 ## X-Package-Version: @project-version@
 
 lua\Helper.lua

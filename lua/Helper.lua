@@ -65,18 +65,6 @@ function GroupHistory_Helper.GetPlayerList()
   return players
 end
 
-function GroupHistory_Helper.GetGroupDetails(groupIndex)
-  local details = {}
-  local group = GroupHistory_Groups[groupIndex].group
-  if group then
-    for _, value in pairs(group) do
-      local _class, _, _race, _, _sex, _name, _realm = GetPlayerInfoByGUID(value)
-      table.insert(details, GetPlayerInfoByGUID(value))
-    end
-  end
-  return details
-end
-
 function GroupHistory_Helper.LocalizedDate(timevalue)
   local locale = GetLocale()
   if locale == 'deDE' then

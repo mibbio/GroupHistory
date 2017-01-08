@@ -48,7 +48,6 @@ function GroupHistoryGroupEntryDelete_OnClick(caller, button)
 end
 
 function Addon:ProcessChanges(event)
-  print(event)
   local guids = GroupHistory_Helper.GetGroupGUIDs()
   if (#guids == 0) then
     self.Session.ID = 0
@@ -69,13 +68,10 @@ function Addon:ProcessChanges(event)
       self.Session.ID = instanceID
     end
     self.Session.Group = guids
-    print('1')
   end
 
   if (event == 'ZONE_CHANGED_NEW_AREA') and IsInInstance() then
-    print('2')
     if (instanceID > 0) and (self.Session.ID ~= instanceID) then
-      print('3')
       self.Session.ID = instanceID
       self.Session.Group = guids
       save = true
@@ -83,7 +79,6 @@ function Addon:ProcessChanges(event)
   end
 
   if save then
-    print(ADDON..': save = '..tostring(save)..', replace = '..tostring(replace))
     local entry = {}
     if replace and (#self.Groups > 0) then
       entry = table.remove(self.Groups)

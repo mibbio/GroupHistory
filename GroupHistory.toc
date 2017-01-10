@@ -1,7 +1,7 @@
 ## Interface: 70100
 ## Title: Group History
 ## Author: mibbio
-## Version: 1.0.0
+## Version: 1.1
 ## Notes: Save a history of groups you were member
 ## DefaultState: Enabled
 ## LoadOnDemand: 0

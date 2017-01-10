@@ -1,7 +1,5 @@
 <UI xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/ ..\FrameXML\UI.xsd">
 
-<!--<Frame name="GroupHistoryListener"></Frame>-->
-
 <Frame name="GroupHistoryContainer" movable="true" enableMouse="true" hidden="true" clampedToScreen="true" parent="UIParent">
   <Size x="640" y="472" />
   <Anchors>
@@ -9,22 +7,11 @@
   </Anchors>
   <Frames>
     <!-- title -->
-    <Frame parentKey="title">
+    <Frame parentKey="title" inherits="GroupHistorySimpleFrame">
       <Size x="640" y="32" />
       <Anchors>
         <Anchor point="TOP" />
       </Anchors>
-      <Backdrop bgFile="Interface\DialogFrame\UI-DialogBox-Background-Dark" edgeFile="Interface\Tooltips\UI-Tooltip-Border" tile="true">
-        <BackgroundInsets>
-          <AbsInset left="4" right="4" top="4" bottom="4" />
-        </BackgroundInsets>
-        <TileSize>
-          <AbsValue val="16" />
-        </TileSize>
-        <EdgeSize>
-          <AbsValue val="16" />
-        </EdgeSize>
-      </Backdrop>
       <Layers>
         <Layer>
           <FontString inherits="GameFontNormal" text="Group History">
@@ -48,28 +35,18 @@
         </OnDragStop>
       </Scripts>
     </Frame>
+
     <!-- content -->
-    <Frame parentKey="content">
+    <Frame parentKey="content" inherits="GroupHistorySimpleFrame">
       <Size x="640" y="440" />
       <Anchors>
         <Anchor point="TOP" x="0" y="-32" />
       </Anchors>
-      <Backdrop bgFile="Interface\DialogFrame\UI-DialogBox-Background-Dark" edgeFile="Interface\Tooltips\UI-Tooltip-Border" tile="true">
-        <BackgroundInsets>
-          <AbsInset left="4" right="4" top="4" bottom="4" />
-        </BackgroundInsets>
-        <TileSize>
-          <AbsValue val="128" />
-        </TileSize>
-        <EdgeSize>
-          <AbsValue val="16" />
-        </EdgeSize>
-      </Backdrop>-
       <Frames>
         <!-- close button -->
-        <Button name="$parentButtonClose" inherits="OptionsButtonTemplate" text="Close">
+        <Button parentKey="exitButton" inherits="OptionsButtonTemplate" text="Close">
           <Anchors>
-            <Anchor point="BOTTOM" x="0" y="16" />
+            <Anchor point="BOTTOMRIGHT" x="-16" y="16" />
           </Anchors>
           <Scripts>
             <OnClick>
@@ -77,7 +54,36 @@
             </OnClick>
           </Scripts>
         </Button>
+        <!-- options button -->
+        <Button parentKey="settingsButton" inherits="OptionsButtonTemplate">
+          <Anchors>
+            <Anchor point="BOTTOMLEFT" x="16" y="16" />
+          </Anchors>
+        </Button>
       </Frames>
+    </Frame>
+
+    <!-- options / filter -->
+    <Frame parentKey="settings" inherits="GroupHistorySimpleFrame">
+      <Anchors>
+        <Anchor point="TOPLEFT" parentKey="$parent.content" x="-180" y="-32" />
+        <Anchor point="BOTTOMRIGHT" relativePoint="BOTTOMLEFT" relativeKey="$parent.content" />
+      </Anchors>
+      <Layers>
+        <Layer>
+          <FontString parentKey="title" inherits="GameFontNormal">
+            <Anchors>
+              <Anchor point="TOP" y="-16" />
+            </Anchors>
+          </FontString>
+          <Texture inherits="GroupHistorySimpleDivider">
+            <Anchors>
+              <Anchor point="TOPLEFT" x="4" y="-32" />
+              <Anchor point="TOPRIGHT" x="-4" y="-32" />
+            </Anchors>
+          </Texture>
+        </Layer>
+      </Layers>
     </Frame>
   </Frames>
   <Scripts>

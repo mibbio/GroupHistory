@@ -11,7 +11,9 @@ local CHOICES_AGE = {
 Addon.Vars = {
   MinimapPos = 45,
   CfgVersion = 2,
-  MaxAge = CHOICES_AGE[5].num
+  MaxAge = CHOICES_AGE[5].num,
+  Chars = {},
+  SelectedChar = 'ALL'
 }
 Addon.Session = {
   ID = 0,
@@ -108,14 +110,14 @@ function GroupHistoryGroupEntryDelete_OnClick(caller, button)
 end
 
 -----------------
--- DropDownAge --
+-- DropdownAge --
 -----------------
-function GroupHistoryAgeDropDown_Initialize(self)
+function GroupHistoryAgeDropdown_Initialize(self)
   local info = UIDropDownMenu_CreateInfo()
 
   info.disabled = nil
   info.isTitle  = nil
-  info.func     = GroupHistoryAgeDropDownOptionClicked
+  info.func     = GroupHistoryAgeDropdownOptionClicked
 
   for _, v in ipairs(CHOICES_AGE) do
     info.text = v.label
@@ -125,7 +127,7 @@ function GroupHistoryAgeDropDown_Initialize(self)
   end
 end
 
-function GroupHistoryAgeDropDown_OnEvent(self, event, ...)
+function GroupHistoryAgeDropdown_OnEvent(self, event, ...)
   if (event == 'PLAYER_ENTERING_WORLD') then
     self.value = 7
     if (Addon.Vars.MaxAge) then
@@ -136,7 +138,7 @@ function GroupHistoryAgeDropDown_OnEvent(self, event, ...)
     self.tooltip = 'Delete entries older than'
 
     UIDropDownMenu_SetWidth(self, 100)
-    UIDropDownMenu_Initialize(self, GroupHistoryAgeDropDown_Initialize)
+    UIDropDownMenu_Initialize(self, GroupHistoryAgeDropdown_Initialize)
     UIDropDownMenu_SetSelectedValue(self, self.value)
 
     self.SetValue =
@@ -155,6 +157,55 @@ end
 
 function GroupHistoryAgeDropDownOptionClicked(self)
   GroupHistoryAgeDropDown:SetValue(self.value)
+end
+
+------------------------
+-- DropdownCharfilter --
+------------------------
+function GroupHistoryFilterDropdown_Initialize(self)
+  local info = UIDropDownMenu_CreateInfo()
+
+  info.disabled = nil
+  info.isTitle  = nil
+  info.func     = GroupHistoryFilterDropdownOptionClicked
+
+  for _,charname in pairs(Addon.Vars.Chars) do
+    info.text = charname
+    info.value = charname
+    info.checked = ((Addon.Vars.SelectedChar) and (Addon.Vars.SelectedChar == charname))
+    UIDropDownMenu_AddButton(info)
+  end
+
+  info.text = 'All'
+  info.value = 'ALL'
+  info.checked = ((not Addon.Vars.SelectedChar) or (Addon.Vars.SelectedChar == 'ALL') or (#Addon.Vars.Chars == 0))
+  UIDropDownMenu_AddButton(info)
+end
+
+function GroupHistoryFilterDropdown_OnEvent(self, event, ...)
+  if (event == 'PLAYER_ENTERING_WORLD') then
+    if (Addon.Vars.SelectedChar ~= 'ALL') then self.value = Addon.Vars.SelectedChar else self.value = 'ALL' end
+    self.tooltip = 'Filter entries by character'
+    UIDropDownMenu_SetWidth(self, 150)
+    UIDropDownMenu_Initialize(self, GroupHistoryFilterDropdown_Initialize)
+    UIDropDownMenu_SetSelectedValue(self, self.value)
+
+    self.SetValue =
+      function(self, value)
+        self.value = value
+        Addon.Vars.SelectedChar = value
+        UIDropDownMenu_SetSelectedValue(self, value)
+      end
+    self.GetValue =
+      function(self)
+        return UIDropDownMenu_GetSelectedValue(self)
+      end
+  end
+  self:UnregisterEvent(event)
+end
+
+function GroupHistoryFilterDropdownOptionClicked(self)
+  GroupHistoryFilterDropdown:SetValue(self.value)
 end
 
 -------------------
@@ -178,31 +229,49 @@ function Addon:Setup()
   local settingsFrame = self.Frame.settings
   settingsFrame:Hide()
   settingsFrame.title:SetText('Settings')
-  local ageDropDown = CreateFrame('Frame', 'GroupHistoryAgeDropDown', settingsFrame, 'UIDropDownMenuTemplate')
-  ageDropDown:RegisterEvent('PLAYER_ENTERING_WORLD')
-  ageDropDown:SetPoint('TOPLEFT', 0, -64)
-  ageDropDown.type = CONTROLTYPE_DROPDOWN
+  local ageDropdown = CreateFrame('Frame', 'GroupHistoryAgeDropdown', settingsFrame, 'UIDropDownMenuTemplate')
+  ageDropdown:RegisterEvent('PLAYER_ENTERING_WORLD')
+  ageDropdown:SetPoint('TOPLEFT', 0, -64)
+  ageDropdown.type = CONTROLTYPE_DROPDOWN
 
-  ageDropDown:SetScript('OnEnter', function(dropdown)
+  ageDropdown:SetScript('OnEnter', function(dropdown)
     if (not dropdown.isDisabled) then
       GameTooltip:SetOwner(dropdown, 'ANCHOR_TOPRIGHT')
       GameTooltip:SetText(dropdown.tooltip, nil, nil, nil, nil, true)
     end
   end)
-  ageDropDown:SetScript('OnLeave', function()
+  ageDropdown:SetScript('OnLeave', function()
     GameTooltip:Hide()
   end)
-  ageDropDown:SetScript('OnEvent', GroupHistoryAgeDropDown_OnEvent)
-  ageDropDown.label = ageDropDown:CreateFontString(nil, nil, 'GameFontHighlightLeft')
-  ageDropDown.label:SetText('Keep log entries')
-  ageDropDown.label:SetPoint('BOTTOMLEFT', ageDropDown, 'TOPLEFT', 20, 4)
+  ageDropdown:SetScript('OnEvent', GroupHistoryAgeDropdown_OnEvent)
+  ageDropdown.label = ageDropdown:CreateFontString(nil, nil, 'GameFontHighlightLeft')
+  ageDropdown.label:SetText('Keep log entries')
+  ageDropdown.label:SetPoint('BOTTOMLEFT', ageDropdown, 'TOPLEFT', 20, 4)
+
+  --------------------------
+  -- Char filter dropdown --
+  --------------------------
+  local filterDropdown = CreateFrame('Frame', 'GroupHistoryFilterDropdown', self.Frame.content, 'UIDropDownMenuTemplate')
+  filterDropdown:RegisterEvent('PLAYER_ENTERING_WORLD')
+  filterDropdown:SetPoint('TOPLEFT', 0, -16)
+
+  filterDropdown:SetScript('OnEnter', function(dropdown)
+    if (not dropdown.isDisabled) then
+      GameTooltip:SetOwner(dropdown, 'ANCHOR_TOPRIGHT')
+      GameTooltip:SetText(dropdown.tooltip, nil, nil, nil, nil, true)
+    end
+  end)
+  filterDropdown:SetScript('OnLeave', function()
+    GameTooltip:Hide()
+  end)
+  filterDropdown:SetScript('OnEvent', GroupHistoryFilterDropdown_OnEvent)
 
   -----------------------
   -- Create Group List --
   -----------------------
   local groupFrame = CreateFrame('Frame', '$parentGroupFrame', self.Frame.content)
   groupFrame:SetSize(ROW_WIDTH, ROW_HEIGHT * MAX_ROWS + 18)
-  groupFrame:SetPoint('TOPLEFT', 16, -16)
+  groupFrame:SetPoint('TOPLEFT', 16, -48)
   groupFrame:SetBackdrop({
 	  bgFile = "Interface\\DialogFrame\\UI-DialogBox-Background", tile = true, tileSize = 16,
 	  edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border", edgeSize = 16,
@@ -275,7 +344,7 @@ function Addon:Setup()
   ------------------------
   local memberFrame = CreateFrame('Frame', '$parentMemberFrame', Addon.Frame.content)
   memberFrame:SetSize(ROW_WIDTH, ROW_HEIGHT * MAX_ROWS + 18)
-  memberFrame:SetPoint('TOPRIGHT', -16, -16)
+  memberFrame:SetPoint('TOPRIGHT', -16, -48)
   memberFrame:SetBackdrop({
 	  bgFile = "Interface\\DialogFrame\\UI-DialogBox-Background", tile = true, tileSize = 16,
 	  edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border", edgeSize = 16,
@@ -337,22 +406,6 @@ function Addon:Setup()
   memberFrame.rows = memberRows
 end
 
-function Addon:ConfirmDialog(msg, callback)
-  local confirmFrame = _G[ADDON..'ConfirmDialog']
-  if not confirmFrame then
-    confirmFrame = CreateFrame('FRAME', ADDON..'ConfirmDialog', UIParent, ADDON..'ConfirmTemplate')
-  end
-  confirmFrame.Title:SetText(Addon.Name..' Update Info')
-  confirmFrame.TextSection:SetText(msg)
-  confirmFrame.Confirm:SetText('Confirm')
-
-  confirmFrame.Confirm:SetScript('OnClick', function()
-    confirmFrame:Hide()
-    if callback then callback(true) end
-  end)
-  confirmFrame:Show()
-end
-
 Addon.Frame:SetScript('OnEvent', function(self, event, ...)
   if event == 'ADDON_LOADED' then
     Addon.Frame:UnregisterEvent('ADDON_LOADED')
@@ -365,6 +418,22 @@ Addon.Frame:SetScript('OnEvent', function(self, event, ...)
     Addon.Vars = GroupHistory_Vars
     Addon.Groups = GroupHistory_Groups
     Addon.Session = GroupHistory_Session
+
+    if not Addon.Vars.SelectedChar then Addon.Vars.SelectedChar = 'ALL' end
+
+    local newChar = true
+    local playerRealm, playerName = GetRealmName(), UnitName('player')
+    local fullname = playerName..'-'..playerRealm
+    if not Addon.Vars.Chars then Addon.Vars.Chars = {} end
+    if #Addon.Vars.Chars > 0 then
+      for _,v in ipairs(Addon.Vars.Chars) do
+        if (v == fullname) then
+          newChar = false
+          break
+        end
+      end
+    end
+    if newChar then table.insert(Addon.Vars.Chars, fullname) end
 
     if (Addon.Vars.MaxAge) and (Addon.Vars.MaxAge > 0) then
       -- delete outdated logs
@@ -388,7 +457,6 @@ Addon.Frame:SetScript('OnEvent', function(self, event, ...)
     if not GroupHistory_Vars.CfgVersion then
       GroupHistory_Vars.CfgVersion = Addon.Vars.CfgVersion
       GroupHistory_Groups = {}
-      Addon:ConfirmDialog('Config format has changed!|n|nDeleting all saved groups.')
     end
 
     Addon:Setup()

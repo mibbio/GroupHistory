@@ -38,7 +38,7 @@
 
     <!-- content -->
     <Frame parentKey="content" inherits="GroupHistorySimpleFrame">
-      <Size x="640" y="440" />
+      <Size x="640" y="472" />
       <Anchors>
         <Anchor point="TOP" x="0" y="-32" />
       </Anchors>

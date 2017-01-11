@@ -1,3 +1,5 @@
+local ADDON, Addon = ...
+
 GroupHistory_Helper = {}
 GroupHistory_Helper.Colors = {
   ['ORANGE']  = 'ffffc300',

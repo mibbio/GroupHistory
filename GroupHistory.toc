@@ -9,10 +9,12 @@
 ## X-Package-Version: @project-version@
 
 lua\Helper.lua
+lua\Migrate.lua
 
 xml\Templates.xml
 xml\GroupHistory.xml
 xml\MinimapButton.xml
 
 lua\GroupHistory.lua
+lua\Dropdowns.lua
 lua\MinimapButton.lua

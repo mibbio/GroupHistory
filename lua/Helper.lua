@@ -14,7 +14,7 @@ local function GetUnitInfo(unit)
     local level = UnitLevel(unit)
     local class, classFile = UnitClass(unit)
     local color = RAID_CLASS_COLORS[classFile]
-    if not realm then realm = GetRealmName()
+    if not realm then realm = GetRealmName() end
     return { name, realm, level, race, format('|cff%.2x%.2x%.2x%s|r', color.r*255, color.g*255, color.b*255, class) }
   else return nil end
 end

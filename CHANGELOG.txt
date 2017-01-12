@@ -1,7 +1,7 @@
-1.1.0
-  - Added option to keep entries for a specified time
-  - Added option to filter entries by character
-
 1.1.1
   - Fixed bug that wrong group members are shown
   - Fixed error when realm of player is missing
+
+1.1.0
+  - Added option to keep entries for a specified time
+  - Added option to filter entries by character

@@ -28,7 +28,7 @@
     <Scripts>
       <OnEnter>
         GameTooltip:SetOwner(self, 'ANCHOR_TOP')
-        GameTooltip:SetText('Whisper '..self:GetParent().player, nil, nil, nil, nil, true)
+        GameTooltip:SetText(self.tooltip, nil, nil, nil, nil, true)
         GameTooltip:Show()
       </OnEnter>
       <OnLeave>
@@ -47,7 +47,7 @@
     <Scripts>
       <OnEnter>
         GameTooltip:SetOwner(self, 'ANCHOR_TOP')
-        GameTooltip:SetText('Invite '..self:GetParent().player..' to party', nil, nil, nil, nil, true)
+        GameTooltip:SetText(self.tooltip, nil, nil, nil, nil, true)
         GameTooltip:Show()
       </OnEnter>
       <OnLeave>
@@ -240,12 +240,6 @@
             </Anchor>
           </Anchors>
         </FontString>
-        <!--<Texture file="Interface\COMMON\Indicator-Gray" parentKey="status">
-          <Size x="32" y="32" />
-          <Anchors>
-            <Anchor point="TOPRIGHT" />
-          </Anchors>
-        </Texture>-->
       </Layer>
     </Layers>
     <Frames>
@@ -254,7 +248,7 @@
           <Anchor point="BOTTOMRIGHT" />
         </Anchors>
       </Button>
-      <Button inherits="GroupHistoryInviteButton">
+      <Button parentKey="invite" inherits="GroupHistoryInviteButton">
         <Anchors>
           <Anchor point="BOTTOMRIGHT" parentKey="invite" relativeKey="$parent.whisper" relativePoint="BOTTOMLEFT" />
         </Anchors>

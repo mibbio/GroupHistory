@@ -18,7 +18,7 @@ end
 
 local function GroupHistoryCharMigrateShow(self)
   self.value = Addon.Vars.Chars[1]
-  self.tooltip = 'Select a character for this log entry'
+  self.tooltip = Addon.L['MIGRATE_SELECT_CHAR']
   UIDropDownMenu_SetWidth(self, 150)
   UIDropDownMenu_Initialize(self, GroupHistoryCharMigrateInitialize)
   UIDropDownMenu_SetSelectedValue(self, self.value)
@@ -49,7 +49,7 @@ function Addon:MigrationDialog(indexList, caller)
   frame:SetFrameStrata('DIALOG')
   local header = frame:CreateFontString(nil, nil, 'GameFontNormalMed2')
   header:SetPoint('TOP', 0, -16)
-  header:SetText(Addon.Name..' Update Info')
+  header:SetText(Addon.Name..' - '..Addon.L['UPDATE_INFO'])
   local timeString = frame:CreateFontString(nil, nil, 'GameFontHighlightMed2')
   timeString:SetPoint('TOP', 0, -48)
   local instanceString = frame:CreateFontString(nil, nil, 'GameFontHighlight')
@@ -58,14 +58,11 @@ function Addon:MigrationDialog(indexList, caller)
   infoString:SetWordWrap(true)
   infoString:SetPoint('TOP', 0, -40)
   infoString:SetWidth(frame:GetWidth() - 20)
-  infoString:SetFormattedText(
-    "Some old log entries don't have any character assigned.|n|n"..
-    "Press 'Start' to manually assign one to the following entries.|n|n"..
-    "|c"..GroupHistory_Helper.Colors['GREEN'].."If any character is missing in the following selection, cancel this windows and login with that char(s).|r"
-  )
+  infoString:SetFormattedText(Addon.L['MIGRATE_TEXT_P1']..Addon.L['MIGRATE_TEXT_P2']..
+    '|c'..GroupHistory_Helper.Colors['GREEN']..Addon.L['MIGRATE_TEXT_P3']..'|r')
 
   local btnCancel = CreateFrame('BUTTON', nil, frame, 'OptionsButtonTemplate')
-  btnCancel:SetText('Cancel')
+  btnCancel:SetText(Addon.L['CANCEL'])
   btnCancel:SetPoint('BOTTOMLEFT', 8, 8)
   btnCancel:SetScript('OnClick', function() frame:Hide() end)
 
@@ -84,11 +81,11 @@ function Addon:MigrationDialog(indexList, caller)
 
 
   local btnNext = CreateFrame('BUTTON', 'nil', frame, 'OptionsButtonTemplate')
-  btnNext:SetText('Start')
+  btnNext:SetText(Addon.L['START'])
   btnNext:SetPoint('BOTTOMRIGHT', -8, 8)
   btnNext:SetScript('OnClick', function()
     if (i <= 0) then
-      btnNext:SetText('Next >>')
+      btnNext:SetText(Addon.L['NEXT']..' >>')
       infoString:Hide()
       charSelect:Show()
     else
@@ -101,11 +98,11 @@ function Addon:MigrationDialog(indexList, caller)
       caller:Hide()
       return
     elseif (i == #indexList) then
-      btnNext:SetText('Done')
+      btnNext:SetText(Addon.L['DONE'])
     end
 
     local entry = Addon.Groups[indexList[i]]
-    header:SetText(format('Set character for entry %d of %d', i, #indexList))
+    header:SetText(Addon.L['SELECT_CHAR_FOR_ENTRY']:format( i, #indexList))
     timeString:SetText(GroupHistory_Helper.LocalizedDate(entry.time))
     instanceString:SetText(EJ_GetInstanceInfo(entry.id))
   end)

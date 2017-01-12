@@ -1,0 +1,33 @@
+local ADDON, Addon = ...
+
+local L = {}
+L['ADDON_LOAD_MSG'] = '|c%s%s|r |c%sv%s|r |c%sloaded.|r'
+L['SETTINGS'] = 'Settings'
+L['NO_CHAR'] = 'No character assigned'
+L['OLD_ENTRIES_REMOVED'] = '|c%s%s|r |c%s%d old entries removed.|r'
+L['1_MONTH'] = '1 month'
+L['2_MONTH'] = '2 months'
+L['1_WEEK'] = '1 week'
+L['2_WEEK'] = '2 weeks'
+L['FOREVER'] = 'forever'
+L['DELETE_OLDER_THAN'] = 'Delete entries older than'
+L['ALL'] = 'All'
+L['FILTER_BY_CHAR'] = 'Filter entries by character'
+L['KEEP_LOG_ENTRIES'] = 'Keep log entries'
+L['TOOLTIP_MINIMAP'] = 'Click to show history.\nHold left mousebutton to drag icon.'
+L['MIGRATE_OLD_LOGS'] = 'Migrate old logs'
+L['MIGRATE_SELECT_CHAR'] = 'Select a character for this log entry'
+L['UPDATE_INFO'] = 'Update Info'
+L['CANCEL'] = 'Cancel'
+L['START'] = 'Start'
+L['NEXT'] = 'Next'
+L['DONE'] = 'Done'
+L['CLOSE'] = 'Close'
+L['INVITE'] = 'Invite %s to party'
+L['WHISPER'] ='Whisper %s'
+L['SELECT_CHAR_FOR_ENTRY'] = 'Set character for entry %d of %d'
+L['MIGRATE_TEXT_P1'] = 'Some old log entries don\'t have any character assigned.|n|n'
+L['MIGRATE_TEXT_P2'] = 'Press \'Start\' to manually assign one to the following entries.|n|n'
+L['MIGRATE_TEXT_P3'] = 'If any character is missing in the following selection, cancel this windows and login with that char(s).'
+
+Addon.L = L

@@ -22,6 +22,7 @@ Addon.Version = GetAddOnMetadata(ADDON, 'X-Package-Version')
 Addon.Frame = _G[ADDON..'Container']
 
 Addon.Frame:RegisterEvent('ADDON_LOADED')
+Addon.Frame.content.exitButton:SetText(Addon.L['CLOSE'])
 
 local MAX_ROWS = 6
 local ROW_HEIGHT = 60
@@ -111,16 +112,16 @@ end
 -------------------
 function Addon:Setup()
   self.Frame.settings:Hide()
-  self.Frame.settings.title:SetText('Settings')
-  self.Frame.content.settingsButton:SetText('<< Settings')
+  self.Frame.settings.title:SetText(Addon.L['SETTINGS'])
+  self.Frame.content.settingsButton:SetText('<< '..Addon.L['SETTINGS'])
   self.Frame.content.settingsButton:SetWidth(150)
   self.Frame.content.settingsButton:SetScript('OnClick', function(btn)
     if self.Frame.settings:IsVisible() then
       self.Frame.settings:Hide()
-      btn:SetText('<< Settings')
+      btn:SetText('<< '..Addon.L['SETTINGS'])
     else
       self.Frame.settings:Show()
-      btn:SetText('>> Settings')
+      btn:SetText('>> '..Addon.L['SETTINGS'])
     end
   end)
 
@@ -163,7 +164,7 @@ function Addon:Setup()
           end
         end
         row.groupIndex = filteredGroups[value][1]
-        row.tooltip = (filteredGroups[value][2].character ~= nil) and filteredGroups[value][2].character or 'No character assigned'
+        row.tooltip = (filteredGroups[value][2].character ~= nil) and filteredGroups[value][2].character or Addon.L['NO_CHAR']
         if withBar then
           row:SetWidth(ROW_WIDTH - 28)
         else
@@ -240,6 +241,9 @@ function Addon:Setup()
           row.fullName = players[value][1]
         end
 
+        row.whisper.tooltip = Addon.L['WHISPER']:format(players[value][1])
+        row.invite.tooltip = Addon.L['INVITE']:format(players[value][1])
+
         row.playerLabel:SetText(row.fullName)
         row.classLabel:SetFormattedText(format('|cffffffff%d %s|r %s', players[value][3], players[value][4], players[value][5]))
 
@@ -282,11 +286,11 @@ end
 Addon.Frame:SetScript('OnEvent', function(self, event, ...)
   if event == 'ADDON_LOADED' then
     Addon.Frame:UnregisterEvent('ADDON_LOADED')
-    DEFAULT_CHAT_FRAME:AddMessage(format('|c%s%s|r |c%sv%s|r |c%sloaded.|r',
+    DEFAULT_CHAT_FRAME:AddMessage(Addon.L['ADDON_LOAD_MSG']:format(
       GroupHistory_Helper.Colors['ORANGE'], Addon.Name,
       GroupHistory_Helper.Colors['BLUE'], Addon.Version,
-      GroupHistory_Helper.Colors['GREEN']
-    ))
+      GroupHistory_Helper.Colors['GREEN'])
+    )
 
     Addon.Vars = GroupHistory_Vars
     Addon.Groups = GroupHistory_Groups
@@ -320,10 +324,10 @@ Addon.Frame:SetScript('OnEvent', function(self, event, ...)
         end
       end
       if dc > 0 then
-        DEFAULT_CHAT_FRAME:AddMessage(format('|c%s%s|r |c%s%d old entries removed.|r',
+        DEFAULT_CHAT_FRAME:AddMessage(Addon.L['OLD_ENTRIES_REMOVED']:format(
           GroupHistory_Helper.Colors['ORANGE'], Addon.Name,
-          GroupHistory_Helper.Colors['GREEN'], dc
-        ))
+          GroupHistory_Helper.Colors['GREEN'], dc)
+        )
       end
     end
 
@@ -343,7 +347,7 @@ Addon.Frame:SetScript('OnEvent', function(self, event, ...)
       local btnMigrate = CreateFrame('BUTTON', nil, Addon.Frame.content, 'OptionsButtonTemplate')
       btnMigrate:SetPoint('TOPRIGHT', Addon.Frame.content, -16, -16)
       btnMigrate:SetWidth(200)
-      btnMigrate:SetText('Migrate old logs')
+      btnMigrate:SetText(Addon.L['MIGRATE_OLD_LOGS'])
       btnMigrate:SetScript('OnClick', function()
         Addon:MigrationDialog(needMigration, btnMigrate)
       end)

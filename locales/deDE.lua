@@ -1,0 +1,34 @@
+local ADDON, Addon = ...
+if GetLocale() ~= 'deDE' then return end
+
+local L = {}
+L['ADDON_LOAD_MSG'] = '|c%s%s|r |c%sv%s|r |c%sgeladen.|r'
+L['SETTINGS'] = 'Einstellungen'
+L['NO_CHAR'] = 'Kein Charakter zugewiesen'
+L['OLD_ENTRIES_REMOVED'] = '|c%s%s|r |c%s%d alte Einträge enfernt.|r'
+L['1_MONTH'] = '1 Monat'
+L['2_MONTH'] = '2 Monate'
+L['1_WEEK'] = '1 Woche'
+L['2_WEEK'] = '2 Wochen'
+L['FOREVER'] = 'Dauerhaft'
+L['DELETE_OLDER_THAN'] = 'Entferne Enträge älter als'
+L['ALL'] = 'Alle'
+L['FILTER_BY_CHAR'] = 'Nach Charakter filtern'
+L['KEEP_LOG_ENTRIES'] = 'Behalte Log Einträge'
+L['TOOLTIP_MINIMAP'] = 'Klicken zum Anzeigen der Liste.|nMaustaste halten zum Verschieben des Icons.'
+L['MIGRATE_OLD_LOGS'] = 'Alte Logs umwandeln'
+L['MIGRATE_SELECT_CHAR'] = 'Wähle einen Charakter für diesen Eintrag'
+L['UPDATE_INFO'] = 'Update Info'
+L['CANCEL'] = 'Abbrechen'
+L['START'] = 'Starten'
+L['NEXT'] = 'Weiter'
+L['DONE'] = 'Fertig'
+L['CLOSE'] = 'Schliessen'
+L['INVITE'] = '%s in Gruppe einladen'
+L['WHISPER'] ='%s anflüstern'
+L['SELECT_CHAR_FOR_ENTRY'] = 'Wähle Charakter für Eintrag %d von %d'
+L['MIGRATE_TEXT_P1'] = 'Einigen alten Einträgen ist kein Charakter zugewiesen.|n|n'
+L['MIGRATE_TEXT_P2'] = 'Drücke \'Starten\', um den folgenden Einträgen einen Charakter zuzuweisen.|n|n'
+L['MIGRATE_TEXT_P3'] = 'Falls ein Charakter in der Auswahl fehlt, breche dieses Fenster ab und melde dich mit dem Fehlenden an.'
+
+Addon.L = L

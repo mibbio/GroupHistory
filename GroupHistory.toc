@@ -8,6 +8,9 @@
 ## SavedVariables: GroupHistory_Vars, GroupHistory_Groups, GroupHistory_Session
 ## X-Package-Version: @project-version@
 
+locales\default.lua
+locales\deDE.lua
+
 lua\Helper.lua
 lua\Migrate.lua
 

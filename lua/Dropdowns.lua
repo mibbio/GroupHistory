@@ -1,11 +1,11 @@
 local ADDON, Addon = ...
 
 local CHOICES_AGE = {
-  { num = 604800,  label = '1 week' },
-  { num = 1209600, label = '2 weeks' },
-  { num = 2592000, label = '1 month' },
-  { num = 5184000, label = '2 months' },
-  { num = 0,       label = 'forever' },
+  { num = 604800,  label = Addon.L['1_WEEK'] },
+  { num = 1209600, label = Addon.L['2_WEEK'] },
+  { num = 2592000, label = Addon.L['1_MONTH'] },
+  { num = 5184000, label = Addon.L['2_MONTH'] },
+  { num = 0,       label = Addon.L['FOREVER'] },
 }
 
 -----------------
@@ -34,7 +34,7 @@ local function AgeDropdownShow(self)
       if (v.num == Addon.Vars.MaxAge) then self.value = v.num break end
     end
   end
-  self.tooltip = 'Delete entries older than'
+  self.tooltip = Addon.L['DELETE_OLDER_THAN']
 
   UIDropDownMenu_SetWidth(self, 100)
   UIDropDownMenu_Initialize(self, AgeDropdownInitialize)
@@ -71,7 +71,7 @@ local function FilterCharDropdownInitialize(self)
     UIDropDownMenu_AddButton(info)
   end
 
-  info.text = 'All'
+  info.text = Addon.L['ALL']
   info.value = 'ALL'
   info.checked = ((not Addon.Vars.SelectedChar) or (Addon.Vars.SelectedChar == 'ALL') or (#Addon.Vars.Chars == 0))
   UIDropDownMenu_AddButton(info)
@@ -79,7 +79,7 @@ end
 
 local function FilterCharDropdownShow(self)
   if (Addon.Vars.SelectedChar ~= 'ALL') then self.value = Addon.Vars.SelectedChar else self.value = 'ALL' end
-  self.tooltip = 'Filter entries by character'
+  self.tooltip = Addon.L['FILTER_BY_CHAR']
   UIDropDownMenu_SetWidth(self, 150)
   UIDropDownMenu_Initialize(self, FilterCharDropdownInitialize)
   UIDropDownMenu_SetSelectedValue(self, self.value)
@@ -113,7 +113,7 @@ ageDropdown:SetScript('OnLeave', function() GameTooltip:Hide() end)
 ageDropdown:SetScript('OnShow', AgeDropdownShow)
 
 ageDropdown.label = ageDropdown:CreateFontString(nil, nil, 'GameFontHighlightLeft')
-ageDropdown.label:SetText('Keep log entries')
+ageDropdown.label:SetText(Addon.L['KEEP_LOG_ENTRIES'])
 ageDropdown.label:SetPoint('BOTTOMLEFT', ageDropdown, 'TOPLEFT', 20, 4)
 
 --------------------------------------

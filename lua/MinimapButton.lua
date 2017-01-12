@@ -33,7 +33,7 @@ MinimapButton:SetScript('OnEnter', function(self)
   GameTooltip:ClearLines()
   GameTooltip:SetOwner(self, 'ANCHOR_CURSOR')
   GameTooltip:AddLine(Addon.Name, 1, 1, 1)
-  GameTooltip:AddLine('Click to show history.\nHold left mousebutton to drag icon.')
+  GameTooltip:AddLine(Addon.L['TOOLTIP_MINIMAP'])
   GameTooltip:Show()
 end)
 

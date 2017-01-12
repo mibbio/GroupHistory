@@ -8,6 +8,7 @@ GroupHistory_Helper.Colors = {
 }
 
 local function GetUnitInfo(unit)
+  -- TODO: get class / race unlocalized
   if UnitExists(unit) then
     local name, realm = UnitName(unit)
     local race = UnitRace(unit)

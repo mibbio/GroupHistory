@@ -234,7 +234,11 @@ function Addon:Setup()
 
         row.player = players[value][1]
         row.realm = players[value][2]
-        row.fullName = players[value][1]..(players[value][2] ~= '' and '-'..players[value][2] or '')
+        if (players[value][2]) and (string.len(players[value][2]) > 0) then
+          row.fullName = players[value][1]..'-'..players[value][2]
+        else
+          row.fullName = players[value][1]
+        end
 
         row.playerLabel:SetText(row.fullName)
         row.classLabel:SetFormattedText(format('|cffffffff%d %s|r %s', players[value][3], players[value][4], players[value][5]))

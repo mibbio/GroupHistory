@@ -28,6 +28,8 @@ local ROW_HEIGHT = 60
 local ROW_WIDTH = 300
 local STATUS_TIMEOUT = 30
 
+Addon.selectedGroup = 0
+
 function Addon:ToggleVisibility()
   if Addon.Frame:IsVisible() then
     Addon.Frame:Hide()
@@ -38,7 +40,7 @@ end
 
 function Addon.ShowGroup(source)
   local memberList = _G[Addon.Frame:GetName()..'MemberFrame']
-  memberList:SetID(source:GetID())
+  memberList:SetID(source.groupIndex)
   if memberList:IsVisible() then
     memberList:Update()
   else
@@ -135,13 +137,10 @@ function Addon:Setup()
   })
 
   function groupFrame:Update()
-    local filteredGroups
-    if (not Addon.Vars.SelectedChar) or (Addon.Vars.SelectedChar == 'ALL') then
-      filteredGroups = Addon.Groups
-    else
-      filteredGroups = {}
-      for _,g in pairs(Addon.Groups) do
-        if (g.character == Addon.Vars.SelectedChar) then table.insert(filteredGroups, g) end
+    local filteredGroups = {}
+    for k,g in pairs(Addon.Groups) do
+      if (g.character == Addon.Vars.SelectedChar) or (not Addon.Vars.SelectedChar) or (Addon.Vars.SelectedChar == 'ALL') then
+        table.insert(filteredGroups, {k, g})
       end
     end
     local maxValue = #filteredGroups
@@ -152,19 +151,19 @@ function Addon:Setup()
       local value = i + offset
       if value <= maxValue then
         local row = self.rows[i]
-        local instanceName, _, _, buttonTexture = EJ_GetInstanceInfo(filteredGroups[value].id)
+        local instanceName, _, _, buttonTexture = EJ_GetInstanceInfo(filteredGroups[value][2].id)
         local regions = { row:GetRegions() }
         for _, region in pairs(regions) do
           if region:GetName() == row:GetName()..'Icon' then
             region:SetTexture(buttonTexture)
           elseif region:GetName() == row:GetName()..'Date' then
-            region:SetText(GroupHistory_Helper.LocalizedDate(filteredGroups[value].time))
+            region:SetText(GroupHistory_Helper.LocalizedDate(filteredGroups[value][2].time))
           elseif region:GetName() == row:GetName()..'Instance' then
             region:SetText(instanceName)
           end
         end
-        row.groupIndex = value
-        row.tooltip = (filteredGroups[value].character ~= nil) and filteredGroups[value].character or 'No character assigned'
+        row.groupIndex = filteredGroups[value][1]
+        row.tooltip = (filteredGroups[value][2].character ~= nil) and filteredGroups[value][2].character or 'No character assigned'
         if withBar then
           row:SetWidth(ROW_WIDTH - 28)
         else
@@ -192,7 +191,6 @@ function Addon:Setup()
 
   local groupRows = setmetatable({}, { __index = function(t, i)
     local row = CreateFrame('Button', '$parentRow'..i, groupFrame, 'GroupHistoryGroupEntryTemplate')
-    row:SetID(i)
     row:SetSize(ROW_WIDTH - 28, ROW_HEIGHT)
     if i == 1 then
       row:SetPoint('TOPLEFT', groupFrame, 4, -4)
